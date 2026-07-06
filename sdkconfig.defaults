@@ -1,0 +1,5 @@
+# sdkconfig.defaults — ESP32 NAT/IP Forward
+# Habilita enrutamiento de paquetes IP entre interfaces AP y STA
+# Necesario para que clientes del AP falso accedan a Internet real
+CONFIG_LWIP_IP_FORWARD=y
+CONFIG_LWIP_IPV4_NAPT=y

@@ -1,0 +1,18 @@
+# Credenciales reales de WiFi (NO publicar)
+credenciales_wifi.h
+**/credenciales_wifi.h
+
+# Artefactos de compilación PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Build de Arduino
+build/
+*.bin
+*.elf
+*.map
+
+# Sistema
+.DS_Store
+Thumbs.db
